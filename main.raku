@@ -1,0 +1,1 @@
+say "CJK Double Stroke Raku project is alive!";
