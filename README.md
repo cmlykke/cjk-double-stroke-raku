@@ -1,9 +1,15 @@
 # cjk-double-stroke-raku
 
+## Recompile on windows:
+- PS C:\Users\CMLyk\RakuProjects\cjk-double-stroke-raku> Remove-Item -Recurse -Force .precomp -ErrorAction SilentlyContinue
+- PS C:\Users\CMLyk\RakuProjects\cjk-double-stroke-raku> Remove-Item -Recurse -Force src\filemanipulation\.precomp -ErrorAction SilentlyContinue
 
 ## Running the project
 - if you are in a WSL linux terminal, run: powershell.exe
 - run: C:\Users\USER\MYPROJECTS\cjk-double-stroke-raku>  raku main.raku
+
+## Run tests
+- run: C:\Users\USER\MYPROJECTS\cjk-double-stroke-raku> raku -I src/filemanipulation test/filemanipulation_test.raku
 
 ## Install SQLite
 - go to https://www.sqlite.org/download.html

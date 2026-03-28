@@ -1,7 +1,22 @@
-say "CJK Double Stroke Raku project is alive!";
-# Tell Raku where to find our module (the 'filemanipulation' folder)
 
-use lib 'filemanipulation';
+say "CJK Double Stroke Raku project is alive!";
+
+# === Run database test as a separate script (this actually works) ===
+#my $test-script = $*PROGRAM.IO.parent.add('src/localdatabase/test-sqlite.raku');
+
+#if $test-script.e {
+#    say "Running database setup from:";
+#    say "   $test-script";
+#    run 'raku', $test-script.absolute;   # <-- This is the key
+#} 
+#else {
+#    say "❌ Could not find test-sqlite.raku at:";
+#    say "   $test-script";
+#}
+
+
+
+use lib 'src/filemanipulation';
 use AddOfficialFilesToDatabase;
 
 
@@ -19,8 +34,8 @@ my %result = parse-cjk-decompositions($fh);
 $fh.close;
 
 say "Successfully parsed {%result.elems} characters.";
-say %result.raku;        # or use dd %result; for debugging
-
+say %result.head;        
+say %result.tail; 
 
 
 #my $fh = $path.IO.open(:r, :enc<utf8>);

@@ -19,7 +19,6 @@
 #|   value = Array of Array[Str]   →  [left-part, right-part] for each decomposition
 unit module AddOfficialFilesToDatabase;
 
-
 sub parse-cjk-decompositions(IO::Handle $fh --> Hash) is export {
     my %result;
 
@@ -27,7 +26,7 @@ sub parse-cjk-decompositions(IO::Handle $fh --> Hash) is export {
         my $line = $raw-line.trim;
         next if $line eq '' || $line.starts-with('#');
 
-        # Extract the CJK character
+       #Extract the CJK character
         my $char = extract-cjk-character($line);
         unless $char {
             note "FAIL (line { $line-no + 1 }): $raw-line\n  Reason: No valid CJK character found.";
@@ -36,6 +35,11 @@ sub parse-cjk-decompositions(IO::Handle $fh --> Hash) is export {
 
         unless is-cjk-unified-ideograph($char) {
             note "FAIL (line { $line-no + 1 }): $raw-line\n  Reason: '$char' is not a CJK Unified Ideograph.";
+            next;
+        }
+
+        if %result{$char}:exists {
+            note "FAIL (line { $line-no + 1 }): '$char'\n  Reason: Char already exists in the hashmap.";
             next;
         }
 
@@ -48,11 +52,14 @@ sub parse-cjk-decompositions(IO::Handle $fh --> Hash) is export {
         }
 
         # Parse each section
-        my @parsed = parse-decomposition-sections(@sections, $raw-line, $line-no);
+        my @parsed := parse-decomposition-sections(@sections, $raw-line, $line-no);
+
+        #note "=== DEBUG: NEW MODULE CODE LOADED for '$char' ===";                     # ← added
+        #note "=== DEBUG: Stored {@parsed.elems} decomps → first = {@parsed[0].raku} ==="; # ← added
 
         # Only store if all sections parsed successfully
         if @parsed {
-            %result{$char} = @parsed;
+            %result{$char} := @parsed;   # ← binding (no Scalar container)
         }
     }
 
@@ -61,24 +68,28 @@ sub parse-cjk-decompositions(IO::Handle $fh --> Hash) is export {
 
 
 sub extract-cjk-character(Str $line --> Str) {
-    $line ~~ / <.ws> (<:CJK_Unified_Ideographs>) / 
-        ?? ~$0 
+    $line ~~ / <.ws> (<:Unified_Ideograph>) /
+        ?? ~$0
         !! Nil
 }
 
 
 sub is-cjk-unified-ideograph(Str $char --> Bool) {
-    my $cp = $char.ord;
-    0x4E00 ≤ $cp ≤ 0x9FFF
+    $char.uniprop('Unified_Ideograph')
 }
-
 
 #| Extracts every occurrence of ^LEFT$(RIGHT) from the line
-sub extract-decomposition-sections(Str $line --> Array) {
-    $line.match(:global, / '^' ( <-[ $ ]>+ ) '$(' ( <-[ ) ]>+ ) ')' / )».List».Str
-    # Returns list of [left, right-inside-parens] for each match
-}
+sub extract-decomposition-sections(Str $line --> Array) is export {
+    my @matches = $line.match(:global, 
+        / '^' ( <-[ $ ]>+? ) '$(' ( <-[ ) ]>* ) ')' / );
 
+    # Each match becomes a clean Array [left, inside]
+    my @result;
+    for @matches -> $m {
+        @result.push: [ ~$m[0].trim, ~$m[1] ];
+    }
+    @result
+}
 
 #| Parses the sections into clean [left, '$(right)'] pairs
 sub parse-decomposition-sections(@sections, Str $original-line, Int $line-no --> Array) {

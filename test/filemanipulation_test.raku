@@ -1,0 +1,62 @@
+use Test;
+use lib 'src/filemanipulation';
+
+use AddOfficialFilesToDatabase;
+
+plan 2;
+
+# Helper to test with string input (clean + reliable)
+sub test-with-input(Str $input, &test-block) {
+    my $tmp-file = $*TMPDIR.add("cjk-test-{rand}.txt");
+    $tmp-file.spurt($input, :enc('utf8'));
+
+    LEAVE $tmp-file.unlink;
+
+    my $fh = $tmp-file.open(:r, :enc('utf8'));
+    LEAVE $fh.close;
+
+    &test-block($fh);
+}
+
+# ===================================================================
+
+subtest 'parse-cjk-decompositions - basic single decomposition' => {
+    my $input = Q:to/END/;
+U+506C 偬 ^⿰亻怱$(GHTJKP)
+END
+
+    test-with-input $input, -> $fh {
+        my %result = parse-cjk-decompositions($fh);
+
+        is %result.elems, 1, 'exactly one character parsed';
+        ok %result<偬>:exists, 'character 偬 is present as key';
+
+        my @decomps := %result<偬>;
+        is @decomps.elems, 1, 'one decomposition for 偬';
+
+        is-deeply @decomps[0], ['⿰亻怱', '$(GHTJKP)'], 
+            'decomposition parsed correctly: left + right';
+    };
+};
+
+subtest 'parse-cjk-decompositions - multiple decompositions' => {
+    my $input = Q:to/END/;
+U+4EE4 令 ^⿱⿵𠆢丶龴$(G[P][V][U][B]) ^⿱{88}龴$(H[M]TPV) ^⿱{88}𰆊$(JK[S])
+END
+
+    test-with-input $input, -> $fh {
+        my %result = parse-cjk-decompositions($fh);
+
+        is %result.elems, 1, 'exactly one character parsed';
+        ok %result<令>:exists, 'character 令 is present as key';
+
+        my @decomps := %result<令>;
+        is @decomps.elems, 3, 'three decompositions for 令';
+
+        is-deeply @decomps[0], ['⿱⿵𠆢丶龴', '$(G[P][V][U][B])'], 'first decomposition correct';
+        is-deeply @decomps[1], ['⿱{88}龴',    '$(H[M]TPV)'],      'second decomposition correct';
+        is-deeply @decomps[2], ['⿱{88}𰆊',    '$(JK[S])'],        'third decomposition correct';
+    };
+};
+
+done-testing;
