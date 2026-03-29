@@ -54,11 +54,39 @@ WebName : utf-8
 CodePage : 65001
 IsSingleByte : False
 
-## run script to read offical files into the SQlite database
-- the file is here: filemanipulation\AddOfficialFilesToDatabase.raku
-- run: 
+## Building the CJK Decomposition Database
+To (re)build the database from the official source files:
+- run: `raku -I src scripts\build-cjk-decompositions-db.raku`
 
-## running tests
+This will:
+1. Parse the official IDS file in `resources/official-cjk-files/`.
+2. Create/Recreate `resources/database/cjk-decompositions.db`.
+3. Populate the database with the parsed data.
+
+## Using the Database in Code
+You can use the `localdatabase::CJKDecompositionDB` module to access the data:
+
+```raku
+use lib 'src';
+use localdatabase::CJKDecompositionDB;
+
+my @decomps = get-decompositions("偬");
+
+if @decomps {
+    say "Decompositions for 偬:";
+    for @decomps -> $pair {
+        say "  Left: {$pair[0]}   Right: {$pair[1]}";
+    }
+}
+```
+
+## Verify that the database is running and works
+- run `raku src/localdatabase/test-sqlite.raku`
+
+This script verifies that the database exists and can be queried for a test character ('偬').
+
+## Running tests
+- run: `raku -I src test/filemanipulation_test.raku`
 
 ## Used Files
 

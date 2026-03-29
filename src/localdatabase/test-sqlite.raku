@@ -1,25 +1,32 @@
 use DB::SQLite;
+use JSON::Fast;
 
-# Correct way to open/create the database with DB::SQLite
-my $db-path = $*PROGRAM.parent.add('src/localdatabase/test-chinese.db');
+# Target the actual database
+my $db-path = $*PROGRAM.parent.parent.parent.add('resources/database/cjk-decompositions.db');
 
-my $db = DB::SQLite.new(:filename($db-path));
+unless $db-path.e {
+    die "Database file not found at: $db-path.absolute()\nPlease build it first with: raku -I src scripts/build-cjk-decompositions-db.raku";
+}
 
+my $db = DB::SQLite.new(:filename($db-path.absolute));
 
-# Create test table
-$db.execute(q:to/SQL/);
-    CREATE TABLE IF NOT EXISTS test (
-        char TEXT PRIMARY KEY,
-        data TEXT
-    );
-SQL
-say "✅ DB::SQLite loaded and database opened successfully on Windows!";
+say "✅ DB::SQLite loaded and database opened successfully!";
 say "SQLite version: ", $db.query('SELECT sqlite_version()').value;
 
-# Optional quick test with a Chinese character
-$db.execute("INSERT OR IGNORE INTO test (char, data) VALUES ('测试', 'It works!')");
-my $result = $db.query("SELECT data FROM test WHERE char = '测试'").value;
-say "Chinese test lookup: ", $result;
+# Test query on the actual table
+my $char = '偬';
+my $result = $db.query('SELECT decomps_json FROM cjk_decompositions WHERE char = ?', $char).value;
+
+if $result {
+    say "Successfully found data for character '$char':";
+    say "Raw JSON: $result";
+    my @decomps = from-json($result);
+    for @decomps -> $pair {
+        say "  Left: {$pair[0]}   Right: {$pair[1]}";
+    }
+} else {
+    say "❌ Character '$char' not found in the database.";
+}
 
 $db.finish;
-say "Test completed successfully. You can now use this setup.";
+say "Verification completed successfully.";
