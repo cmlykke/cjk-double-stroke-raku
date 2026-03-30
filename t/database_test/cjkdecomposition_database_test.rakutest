@@ -1,0 +1,19 @@
+use Test;
+use CJKDecompositionDB;
+
+plan 4;
+
+# 1. Test database connection and existence of tables
+my $db = get-db();
+ok $db, "Database connection established";
+
+# 2. Test decompositions for '偬'
+my $char = '偬';
+my @decomps = get-decompositions($char);
+ok @decomps.elems > 0, "Decompositions found for '$char'";
+if @decomps {
+    is @decomps[0][0], '⿰亻怱', "First decomposition for '$char' left part is '⿰亻怱'";
+    is @decomps[0][1], '$(GHTJKP)', "First decomposition for '$char' right part is '\$(GHTJKP)'";
+}
+
+done-testing;

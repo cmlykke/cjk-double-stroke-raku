@@ -42,22 +42,24 @@ ie.
   CodePage : 65001
   IsSingleByte : False
 
-## Building the CJK Decomposition Database
+## Building the CJK Database
 To (re)build the database from the official source files:
-- run: `raku -I src scripts\build-cjk-decompositions-db.raku`
+- run: `raku -I lib scripts\build-cjk-decompositions-db.raku`
 
 This will:
 1. Parse the official IDS file in `resources/official-cjk-files/`.
-2. Create/Recreate `resources/database/cjk-decompositions.db`.
-3. Populate the database with the parsed data.
+2. Parse Junda (2005) and Tzai (2006) frequency files.
+3. Create/Recreate `resources/database/cjk-decompositions.db`.
+4. Populate the database with both decomposition and frequency data.
 
 ## Using the Database in Code
-You can use the `localdatabase::CJKDecompositionDB` module to access the data:
+You can use the `CJKDecompositionDB` module to access the data:
 
 ```raku
-use lib 'src';
-use localdatabase::CJKDecompositionDB;
+use lib 'lib';
+use CJKDecompositionDB;
 
+# Get decompositions
 my @decomps = get-decompositions("偬");
 
 if @decomps {
@@ -66,9 +68,16 @@ if @decomps {
         say "  Left: {$pair[0]}   Right: {$pair[1]}";
     }
 }
+
+# Get frequencies
+my %freq = get-frequencies("知");
+if %freq {
+    say "Junda rank: %freq<junda-ord>";
+    say "Tzai rank:  %freq<tzai-ord>";
+}
 ```
 
 ## Verify that the database is running and works
-- run `raku src/localdatabase/test-sqlite.raku`
+- run the tests here: t/database_test
 
-This script verifies that the database exists and can be queried for a test character ('偬').
+these tests will verify that the database contain  selected examples of the desired data.

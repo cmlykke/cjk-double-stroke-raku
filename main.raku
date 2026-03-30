@@ -16,7 +16,6 @@ say "CJK Double Stroke Raku project is alive!";
 
 
 
-use lib 'src/filemanipulation';
 use AddOfficialFilesToDatabase;
 
 

@@ -1,0 +1,26 @@
+{
+  "name": "cjk-double-stroke-raku",
+  "version": "0.0.1",
+  "auth": "zef:CMLyk",
+  "description": "CJK double stroke decomposition library",
+  "provides": {
+    "AddOfficialFilesToDatabase": "lib/AddOfficialFilesToDatabase.rakumod",
+    "CJKDecompositionDB": "lib/CJKDecompositionDB.rakumod",
+    "parseJundaAndTzaiToDatabase": "lib/parseJundaAndTzaiToDatabase.rakumod"
+  },
+  "depends": [
+    "DB::SQLite",
+    "JSON::Fast"
+  ],
+  "test-depends": [
+    "Test"
+  ],
+  "resources": [
+    "database/cjk-decompositions.db",
+    "manual-cjk-files/manual-ids-override.txt",
+    "official-cjk-files/Junda2005.txt",
+    "official-cjk-files/Tzai2006.txt",
+    "official-cjk-files/babelstone-co-uk-cjk-ids.txt"
+  ],
+  "source-url": ""
+}

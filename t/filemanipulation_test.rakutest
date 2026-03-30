@@ -1,6 +1,4 @@
 use Test;
-use lib 'src/filemanipulation';
-
 use AddOfficialFilesToDatabase;
 
 plan 2;
