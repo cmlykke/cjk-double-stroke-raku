@@ -1,19 +1,45 @@
 use Test;
 use CJKDecompositionDB;
 
-plan 4;
+plan 3;
 
-# 1. Test database connection and existence of tables
-my $db = get-db();
-ok $db, "Database connection established";
 
-# 2. Test decompositions for '偬'
-my $char = '偬';
-my @decomps = get-decompositions($char);
-ok @decomps.elems > 0, "Decompositions found for '$char'";
-if @decomps {
-    is @decomps[0][0], '⿰亻怱', "First decomposition for '$char' left part is '⿰亻怱'";
-    is @decomps[0][1], '$(GHTJKP)', "First decomposition for '$char' right part is '\$(GHTJKP)'";
+subtest 'database-cjk-decompositions - example lookup: 偬' => {
+    # U+506C	偬	^⿰亻怱$(GHTJKP)
+    my $char = '偬';
+    my @decomps = get-decompositions($char);
+    say @decomps.raku;
+    ok @decomps.elems > 0, "Decompositions found for '$char'";
+    if @decomps {
+        is @decomps[0][0], '⿰亻怱', "First decomposition for '$char' left part is '⿰亻怱'";
+        is @decomps[0][1], '$(GHTJKP)', "First decomposition for '$char' right part is '\$(GHTJKP)'";
+    }
+}
+
+subtest 'database-cjk-decompositions - example lookup: 坢' => {
+    # U+5762	坢	^⿰土半$(GHTK)	^⿰土⿻八𰀁$(J)
+    my $char = '坢';
+    my @decomps = get-decompositions($char);
+    say @decomps.raku;
+    ok @decomps.elems > 0, "Decompositions found for '$char'";
+    if @decomps {
+        is @decomps[0][0], '⿰土半', "First decomposition for '$char' left part is '⿰土半'";
+        is @decomps[0][1], '$(GHTK)', "First decomposition for '$char' right part is '\$(GHTK)'";
+        is @decomps[1][0], '⿰土⿻八𰀁', "Second decomposition for '$char' left part is '⿰土⿻八𰀁'";
+        is @decomps[1][1], '$(J)', "Second decomposition for '$char' right part is '\$(J)'";
+    }
+}
+
+subtest 'database-cjk-decompositions - example lookup: 傘' => {
+    # U+5098	傘	^⿱𠆢⿻𠈌十$(GHTJKPV)	*U+5098(V) was ^⿱𠆢⿻㸚十$ before Unicode 15.1
+    my $char = '傘';
+    my @decomps = get-decompositions($char);
+    say @decomps.raku;
+    ok @decomps.elems > 0, "Decompositions found for '$char'";
+    if @decomps {
+        is @decomps[0][0], '⿱𠆢⿻𠈌十', "First decomposition for '$char' left part is '⿱𠆢⿻𠈌十'";
+        is @decomps[0][1], '$(GHTJKPV)', "First decomposition for '$char' right part is '\$(GHTJKP)'";
+    }
 }
 
 done-testing;

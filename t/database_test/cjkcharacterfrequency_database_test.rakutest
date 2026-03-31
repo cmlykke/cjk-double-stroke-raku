@@ -1,31 +1,34 @@
 use Test;
 use CJKDecompositionDB;
 
-plan 11;
+plan 2;
 
-# 1. Test database connection and existence of tables
-my $db = get-db();
-ok $db, "Database connection established";
 
-# 3. Test frequencies for '知'
-my %freq = get-frequencies('知');
-ok %freq, "Frequencies found for '知'";
-my @keys = %freq.keys;
-say "there are { @keys.elems } Keys for '知': { @keys.join(', ') }";
+subtest 'database-cjk-character-frequency - example lookup: 的' => {
+    # Check '的' (rank 1 in both)
+    my %freq-de = get-frequencies('的');
+    is %freq-de<junda-ord>, 1, "'的' Junda rank is 1";
+    is %freq-de<tzai-ord>, 1, "'的' Tzai rank is 1";
+}
 
-is %freq<junda-freq>, 0.001584, "Junda frequency for '知' is 0.001584";
-is %freq<junda-freq>.numerator, 2, "Junda numerator for '知' is 2";
-is %freq<junda-freq>.denominator, 1263, "Junda denominator for '知' is 1263";
+subtest 'database-cjk-character-frequency - example lookup: 知' => {
+    # Test frequencies for '知'
+    my %freq = get-frequencies('知');
+    ok %freq, "Frequencies found for '知'";
+    my @keys = %freq.keys.sort;
+    is @keys, ["junda-freq", "junda-ord", "tzai-freq", "tzai-ord"],
+       "there are {@keys.elems} keys for '知': {@keys.join(', ')}";
 
-is %freq<tzai-freq>, 0.002527, "Tzai frequency for '知' is 0.002527";
-is %freq<tzai-freq>.numerator, 4, "Tzai numerator for '知' is 4";
-is %freq<tzai-freq>.denominator, 1583, "Tzai denominator for '知' is 1583";
+    is %freq<junda-freq>, 0.001584, "Junda frequency for '知' is 0.001584";
+    is %freq<junda-freq>.numerator, 2, "Junda numerator for '知' is 2";
+    is %freq<junda-freq>.denominator, 1263, "Junda denominator for '知' is 1263";
 
-is %freq<junda-ord>, 123, "Junda rank for '知' is 123";
-is %freq<tzai-ord>, 71, "Tzai rank for '知' is 71";
+    is %freq<tzai-freq>, 0.002527, "Tzai frequency for '知' is 0.002527";
+    is %freq<tzai-freq>.numerator, 4, "Tzai numerator for '知' is 4";
+    is %freq<tzai-freq>.denominator, 1583, "Tzai denominator for '知' is 1583";
 
-# 4. Check '的' (rank 1 in both)
-my %freq-de = get-frequencies('的');
-is %freq-de<junda-ord>, 1, "'的' Junda rank is 1";
+    is %freq<junda-ord>, 123, "Junda rank for '知' is 123";
+    is %freq<tzai-ord>, 71, "Tzai rank for '知' is 71";
+}
 
 done-testing;

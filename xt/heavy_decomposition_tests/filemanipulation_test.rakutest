@@ -1,7 +1,7 @@
 use Test;
 use AddOfficialFilesToDatabase;
 
-plan 2;
+plan 3;
 
 # Helper to test with string input (clean + reliable)
 sub test-with-input(Str $input, &test-block) {
@@ -17,6 +17,16 @@ sub test-with-input(Str $input, &test-block) {
 }
 
 # ===================================================================
+subtest 'parse-cjk-decompositions - count all decomposition characters' => {
+
+    my $source-file = $*PROGRAM.parent.parent.parent.add('resources/official-cjk-files/babelstone-co-uk-cjk-ids.txt');
+    say "Parsing decompositions...";
+    my $fh = open $source-file, :r;
+    my %parsed = parse-cjk-decompositions($fh);
+    is %parsed.elems, 97680, 'exactly 97680 character parsed';
+    $fh.close;
+
+}
 
 subtest 'parse-cjk-decompositions - basic single decomposition' => {
     my $input = Q:to/END/;

@@ -1,0 +1,68 @@
+
+use lib 'lib';
+use Test;
+
+plan 2;
+
+use orderedlist;
+use CJKDecompositionDB;
+my $db = get-db();
+
+subtest 'orderedlist-cjk-frequency all combination of junda and tzai - example lookup: 傘' => {
+    my @ordered = get-ordered-cjk-frequencies($db);
+
+    is @ordered.elems(), 16373, "number of all sorted junda and tzai items: 16373";
+
+    # result for 預 tzai 680 junda 6179
+    my $index980 = @ordered[980];
+    is $index980[0], '預', "Index zero is the character: 預";
+    is $index980[1], 'tzai', "預 Index one index is the string tzai";
+    is $index980[2], 680, "預 Index two index is the number 680";
+    is $index980[3], 'junda', "預 Index three index is the string junda";
+    is $index980[4], 6179, "預 Index two index is the number 6179";
+
+    my $index981 = @ordered[981];
+    is $index981[0], '财', "Index zero is the character: 财";
+    is $index981[1], 'junda', "财 Index one index is the string junda";
+    is $index981[2], 680, "财 Index two index is the number 680";
+    is $index981[3], 'tzai', "财 Index three index is the string tzai";
+    is $index981[4], Any, "财 Index two index is the number Any";
+
+    # result for 呀 tzai 681 junda 929
+    my $index982 = @ordered[982];
+    is $index982[0], '呀', "Index zero is the character: 呀";
+    is $index982[1], 'tzai', "呀 Index one index is the string tzai";
+    is $index982[2], 681, "呀 Index two index is the number 681";
+    is $index982[3], 'junda', "呀 Index three index is the string junda";
+    is $index982[4], 929, "呀 Index two index is the number 929";
+
+    # result for 环 junda 681 tzai
+    my $index983 = @ordered[983];
+    is $index983[0], '环', "Index zero is the character: 环";
+    is $index983[1], 'junda', "环 Index one index is the string junda";
+    is $index983[2], 681, "环 Index two index is the number 681";
+    is $index983[3], 'tzai', "环 Index three index is the string tzai";
+    is $index983[4], Any, "环 Index two index is the number Any";
+
+    # result for 眾 tzai 682 junda 6404
+    my $index984 = @ordered[984];
+    is $index984[0], '眾', "Index zero is the character: 眾";
+    is $index984[1], 'tzai', "眾 Index one index is the string tzai";
+    is $index984[2], 682, "眾 Index two index is the number 682";
+    is $index984[3], 'junda', "眾 Index three index is the string junda";
+    is $index984[4], 6404, "眾 Index two index is the number 6404";
+
+}
+
+subtest 'orderedlist-cjk-frequency shared-only sorted junda and tzai' => {
+    # U+5098	傘	^⿱𠆢⿻𠈌十$(GHTJKPV)	*U+5098(V) was ^⿱𠆢⿻㸚十$ before Unicode 15.1
+    my $char = '傘';
+
+    my @ordered = get-ordered-cjk-shared-frequencies($db);
+    is @ordered.elems(), 6617, "number of shared-only frequency items: 6617";
+}
+
+done-testing;
+
+
+

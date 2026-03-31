@@ -1,4 +1,21 @@
 
+## Install dependencies
+This project uses several libraries. Since Raku does not automatically install dependencies from a file like `package.json` in Node.js, you must install them manually or using `zef`:
+
+- **Required Libraries:**
+    - `DB::SQLite`
+    - `JSON::Fast`
+
+To install all dependencies, run:
+- `zef install . --deps-only`
+
+Alternatively, you can install them individually:
+- `zef install DB::SQLite JSON::Fast`
+- `zef install App::Prove6`
+
+If these are not installed, you will get an error when running `prove6 -I. t/`.
+
+
 ## File Protection
 
 ### Protecting Official CJK Data Files

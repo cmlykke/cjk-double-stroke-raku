@@ -1,0 +1,36 @@
+use Test;
+use lib 'lib';
+use CJKDecompositionDB;
+
+plan 2;
+
+
+subtest 'database-cjk-decomposition - example lookup: 知' => {
+    my %all-decomps = get-all-decompositions();
+    is %all-decomps.elems, 97680, "All decompositions found (97680 characters)";
+
+    is %all-decomps<知>[0][0], '⿰矢口', "First decomposition for 知 left part is '⿰矢口'";
+    is %all-decomps<知>[0][1], '$(GHTJKPV)', "First decomposition for 知 right part is '\$(GHTJKPV)'";
+}
+
+
+subtest 'database-cjk-character-frequency - example lookup: 知' => {
+    my %all-freqs = get-all-frequencies();
+    is %all-freqs.elems, 16373, "All frequencies found (16373 characters)";
+
+    # Verify ordinal frequency
+    is %all-freqs<知><junda-ord>, 123, "Junda rank for '知' is 123";
+    is %all-freqs<知><tzai-ord>, 71, "Tzai rank for '知' is 71";
+
+    # Verify Rat type
+    isa-ok %all-freqs<知><junda-freq>, Rat, "Junda frequency is a Rat";
+    isa-ok %all-freqs<知><tzai-freq>, Rat, "Tzai frequency is a Rat";
+
+    # Check one more: '的' should be rank 1 in both
+    is %all-freqs<的><junda-ord>, 1, "'的' Junda rank is 1";
+    is %all-freqs<的><tzai-ord>, 1, "'的' Tzai rank is 1";
+}
+
+
+
+done-testing;

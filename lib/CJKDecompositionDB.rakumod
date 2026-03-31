@@ -69,6 +69,24 @@ sub get-frequencies(Str $char --> Hash) is export {
     };
 }
 
+#| Returns the full hashmaps for all character frequencies.
+sub get-all-frequencies(--> Hash) is export {
+    my %result;
+    my $db = get-db();
+    my $res = $db.query('SELECT char, junda_ord, junda_freq, tzai_ord, tzai_freq FROM cjk_frequencies');
+
+    my @rows = $res.hashes;
+    for @rows -> $row {
+        %result{$row<char>} = {
+            junda-ord  => $row<junda_ord>,
+            junda-freq => $row<junda_freq> ?? $row<junda_freq>.Rat !! 0.Rat,
+            tzai-ord   => $row<tzai_ord>,
+            tzai-freq  => $row<tzai_freq> ?? $row<tzai_freq>.Rat !! 0.Rat,
+        };
+    }
+    return %result;
+}
+
 #| Returns the decomposition data exactly as your parser produced it:
 #|   Array of Array[Str]  →  [ [left1, '$(right1)'], [left2, '$(right2)'], ... ]
 sub get-decompositions(Str $char --> Array) is export {
@@ -79,6 +97,19 @@ sub get-decompositions(Str $char --> Array) is export {
 
     return () unless $row;                 # not found → empty list
     from-json($row[0])                     # returns Array[Array[Str]]
+}
+
+#| Returns the full hashmaps for all character decompositions.
+sub get-all-decompositions(--> Hash) is export {
+    my %result;
+    my $db = get-db();
+    my $res = $db.query('SELECT char, decomps_json FROM cjk_decompositions');
+
+    my @rows = $res.hashes;
+    for @rows -> $row {
+        %result{$row<char>} = from-json($row<decomps_json>);
+    }
+    return %result;
 }
 
 #| Optional: get raw JSON if you ever need it

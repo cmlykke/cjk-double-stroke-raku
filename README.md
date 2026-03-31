@@ -24,15 +24,26 @@ Has a focus on setting up file protection
 - run: C:\Users\USER\MYPROJECTS\cjk-double-stroke-raku>  raku -I lib main.raku
 
 ## Run tests
+- Run all tests:
+- run: C:\Users\USER\MYPROJECTS\cjk-double-stroke-raku> prove6 -I. t/ xt/
+
+- Run only light tests:
+- run: C:\Users\USER\MYPROJECTS\cjk-double-stroke-raku> prove6 -I. t/
+
+- Run only heavy tests:
+- run: C:\Users\USER\MYPROJECTS\cjk-double-stroke-raku> prove6 -I. xt/
+
 - Run all tests (standard Raku way):
 - run: C:\Users\USER\MYPROJECTS\cjk-double-stroke-raku> zef test .
 - or
 - run: C:\Users\USER\MYPROJECTS\cjk-double-stroke-raku>  zef test . --verbose
+- 
 - Run single test file:
-- run: C:\Users\USER\MYPROJECTS\cjk-double-stroke-raku> raku -I lib test/filemanipulation_test.raku
-- run: C:\Users\USER\MYPROJECTS\cjk-double-stroke-raku> raku -I lib test/parsingJundaAndTzai_test.raku
 - run: C:\Users\USER\MYPROJECTS\cjk-double-stroke-raku> raku -I lib t/database_test/cjkdecomposition_database_test.rakutest
 - run: C:\Users\USER\MYPROJECTS\cjk-double-stroke-raku> raku -I lib t/database_test/cjkcharacterfrequency_database_test.rakutest
+- run: C:\Users\USER\MYPROJECTS\cjk-double-stroke-raku> raku -I lib xt/heavy_database_tests/get_all_data_test.rakutest
+- run: C:\Users\USER\MYPROJECTS\cjk-double-stroke-raku> raku -I lib xt/heavy_decomposition_tests/filemanipulation_test.rakutest
+- run: C:\Users\USER\MYPROJECTS\cjk-double-stroke-raku> raku -I lib xt/heavy_decomposition_tests/parsingJundaAndTzai_test.rakutest
 
 ## How to use the SQlite database
 - [README-database](./READMEfiles/README-database.md)
