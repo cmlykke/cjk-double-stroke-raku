@@ -17,7 +17,7 @@
 #| Returns a Hash where:
 #|   key   = CJK character (Str)
 #|   value = Array of Array[Str]   →  [left-part, right-part] for each decomposition
-unit module AddOfficialFilesToDatabase;
+unit module databasehandling::AddOfficialFilesToDatabase;
 
 sub parse-cjk-decompositions(IO::Handle $fh --> Hash) is export {
     my %result;

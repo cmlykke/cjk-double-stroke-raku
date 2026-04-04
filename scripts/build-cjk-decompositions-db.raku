@@ -2,8 +2,8 @@
 #| Rebuilds the CJK decomposition database from the official source file.
 #| Run this whenever the official data changes.
 
-use AddOfficialFilesToDatabase;
-use parseJundaAndTzaiToDatabase;
+use databasehandling::AddOfficialFilesToDatabase;
+use databasehandling::parseJundaAndTzaiToDatabase;
 
 use DB::SQLite;
 use JSON::Fast;

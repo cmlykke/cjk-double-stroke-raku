@@ -4,8 +4,8 @@ use Test;
 
 plan 2;
 
-use orderedlist;
-use CJKDecompositionDB;
+use databasehandling::orderedlist;
+use databasehandling::CJKDecompositionDB;
 my $db = get-db();
 
 subtest 'orderedlist-cjk-frequency all combination of junda and tzai - example lookup: 傘' => {

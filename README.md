@@ -44,6 +44,7 @@ Has a focus on setting up file protection
 - run: C:\Users\USER\MYPROJECTS\cjk-double-stroke-raku> raku -I lib xt/heavy_database_tests/get_all_data_test.rakutest
 - run: C:\Users\USER\MYPROJECTS\cjk-double-stroke-raku> raku -I lib xt/heavy_decomposition_tests/filemanipulation_test.rakutest
 - run: C:\Users\USER\MYPROJECTS\cjk-double-stroke-raku> raku -I lib xt/heavy_decomposition_tests/parsingJundaAndTzai_test.rakutest
+- run: C:\Users\USER\MYPROJECTS\cjk-double-stroke-raku> raku -I lib t/idsparsing/idsparsing_test.rakutest
 
 ## How to use the SQlite database
 - [README-database](./READMEfiles/README-database.md)

@@ -1,5 +1,5 @@
 use Test;
-use CJKDecompositionDB;
+use databasehandling::CJKDecompositionDB;
 
 plan 3;
 

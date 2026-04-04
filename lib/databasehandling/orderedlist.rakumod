@@ -1,3 +1,5 @@
+unit module databasehandling::orderedlist;
+
 use DB::SQLite;
 
 sub get-ordered-cjk-shared-frequencies(DB::SQLite $db) is export {

@@ -1,7 +1,7 @@
 
 use lib 'lib';
-use CJKDecompositionDB;
-use orderedlist;
+use databasehandling::CJKDecompositionDB;
+use databasehandling::orderedlist;
 my $db = get-db();
 
 say "CJK Double Stroke Raku project is alive!";

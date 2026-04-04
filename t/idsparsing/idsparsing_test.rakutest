@@ -1,0 +1,11 @@
+use Test;
+use lib 'lib';
+
+use file-parsing::idsparsing;
+
+plan 1;
+
+subtest 'start using idsparsing' => {
+    my $number = get-ordered-cjk-frequencies-count();   # ← changed
+    is $number, 16373, "Total numbers";
+}

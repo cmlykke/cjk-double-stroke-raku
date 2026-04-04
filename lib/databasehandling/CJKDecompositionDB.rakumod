@@ -1,6 +1,6 @@
 #| Provides clean access to the CJK decomposition SQLite database.
 
-unit module CJKDecompositionDB;
+unit module databasehandling::CJKDecompositionDB;
 
 use DB::SQLite;
 use JSON::Fast;
