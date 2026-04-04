@@ -63,9 +63,9 @@ sub get-frequencies(Str $char --> Hash) is export {
 
     return {
         junda-ord  => $row<junda_ord>,
-        junda-freq => $row<junda_freq>.Rat,
+        junda-freq => $row<junda_freq> ?? $row<junda_freq>.Rat !! Any,
         tzai-ord   => $row<tzai_ord>,
-        tzai-freq  => $row<tzai_freq>.Rat,
+        tzai-freq  => $row<tzai_freq> ?? $row<tzai_freq>.Rat !! Any,
     };
 }
 

@@ -8,4 +8,10 @@ plan 1;
 subtest 'start using idsparsing' => {
     my $number = get-ordered-cjk-frequencies-count();   # ← changed
     is $number, 16373, "Total numbers";
+
+    my $res = get-ids-recur("劉");
+    say $res;
+    is $res, “5”, "my num";
+
 }
+
