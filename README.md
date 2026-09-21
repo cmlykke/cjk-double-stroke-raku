@@ -58,4 +58,11 @@ Run the project with that binary:
 }
 ```
 
-Open a new terminal after saving the settings, then use **Terminal → Run Task**.
+Open a new terminal after saving the settings, then go to the raku files you wish to run, and press Ctrl + Shift + b.
+
+add .rakupp and .vscode to .gitignore:
+/.rakupp/
+/.vscode/
+
+
+

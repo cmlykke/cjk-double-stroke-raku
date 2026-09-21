@@ -33,3 +33,8 @@ inc/
 /MANIFEST.bak
 /pm_to_blib
 /*.zip
+
+# Exclude .vscode and .rakupp
+/.rakupp/
+/.vscode/
+/.idea/
